@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/DanielArmengod1996/ytSocialMediaProyect-Server/issues"
   },
-  "homepage": "https://github.com/DanielArmengod1996/ytSocialMediaProyect-Server#readme"
+  "homepage": "https://github.com/DanielArmengod1996/ytSocialMediaProyect-Server#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "https": "^1.0.0"
+  }
 }
