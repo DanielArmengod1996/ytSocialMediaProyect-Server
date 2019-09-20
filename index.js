@@ -30,8 +30,13 @@ function getResponseFromServer(){
 }
 
 app.get('/getNames', (req, res) => {
-  var finalResponse = getResponseFromServer();
-  res.send(finalResponse);
+  var responseBody = getResponseFromServer();
+  console.log( responseBody );
+  var finalresponse = responseBody.replace(/443::::::::::::::::::/g, "aragondata");
+  
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('content-type', 'application/json');
+  res.send( finalResponse );
 });
 
 
