@@ -11,7 +11,7 @@ var options =
 // init node-modules
 const express = require('express');
 const https = require('https');
-const JsonFind = require('json-find');
+
 
 
 //instances
@@ -29,6 +29,7 @@ app.get('/getNames', (req, wsRes) => {
     const provincia = req.query.provincia;
     console.log(provincia);
     var data = '';
+
     res.on('data', (chunk) => {
       data += chunk;
     });
@@ -38,7 +39,7 @@ app.get('/getNames', (req, wsRes) => {
 
       responseBody = data;
 
-      finalResponse = prepareResponse( responseBody );
+      finalResponse = prepareResponse( responseBody, provincia );
 
       var responseBody = JSON.stringify( finalResponse );
     
@@ -48,8 +49,8 @@ app.get('/getNames', (req, wsRes) => {
       wsRes.send( responseBody );
 
     });
-  });
 
+  });
 
 });
 
@@ -74,12 +75,14 @@ app.listen(PORT, () => {
  * @param {*} responseBody 
  * @param {*} res 
  */
-function prepareResponse(jsonText){
+function prepareResponse(jsonText, nombreProvincia){
   var lstCodigoProvincia = new Array();
   var responseBody = JSON.parse( jsonText );
   if( responseBody ){
     responseBody.forEach(element => {
-      lstCodigoProvincia.push( new WrpResponse( element.CODPROV, element.NOMBRE_PROVINCIA ) );
+      if( element.NOMBRE_PROVINCIA.includes( nombreProvincia ) ){
+        lstCodigoProvincia.push( new WrpResponse( element.CODPROV, element.NOMBRE_PROVINCIA ) );
+      }
     });
 
   }
