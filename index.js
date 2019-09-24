@@ -64,7 +64,7 @@ function prepareResponse(jsonText, nombreProvincia){
   var responseBody = JSON.parse( jsonText );
   if( responseBody ){
     responseBody.forEach(element => {
-      if( element.NOMBRE_PROVINCIA.includes( nombreProvincia ) ){
+      if( element.NOMBRE_PROVINCIA.toUpperCase().includes( nombreProvincia.toUpperCase() ) ){
         lstCodigoProvincia.push( new WrpResponse( element.CODPROV, element.NOMBRE_PROVINCIA ) );
       }
     });
