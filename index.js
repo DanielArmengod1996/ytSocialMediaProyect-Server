@@ -1,16 +1,17 @@
 // API: https://www.pue.es/cursos/salesforce/tech-talk-cta
 //var url = 'https://www.el-tiempo.net/api/json/v1/provincias';
 
-var options = 
+var option1 = 
 {
-  hostname : 'www.el-tiempo.net',
-  path: '/api/json/v1/provincias',
-  agent: false
+  url : 'https://www.el-tiempo.net/api/json/v1/provincias',
+  headers: {
+    'User-Agent':'request'
+  }
 };
 
 // init node-modules
 const express = require('express');
-const https = require('https');
+const request = require('request');
 
 
 
@@ -23,33 +24,16 @@ const app = express();
  * @description webservice method type 'get'
  */
 app.get('/getNames', (req, wsRes) => {
-  var finalResponse;
-  https.get(options, (res)=>{
-    
+  doGetRequest(option1).then(function(data){
+    const finalResponse = data;
+    console.log(finalResponse);
     const provincia = req.query.provincia;
-    console.log(provincia);
-    var data = '';
-
-    res.on('data', (chunk) => {
-      data += chunk;
-    });
-
-    res.on('end', () => {
-      console.log( finalResponse );
-
-      responseBody = data;
-
-      finalResponse = prepareResponse( responseBody, provincia );
-
-      var responseBody = JSON.stringify( finalResponse );
+    const wrappedResponse = prepareResponse( finalResponse, provincia );
+    const responseBody = JSON.stringify(wrappedResponse);
+    wsRes.setHeader('Access-Control-Allow-Origin', '*');
+    wsRes.setHeader('content-type', 'application/json');
     
-      wsRes.setHeader('Access-Control-Allow-Origin', '*');
-      wsRes.setHeader('content-type', 'application/json');
-      
-      wsRes.send( responseBody );
-
-    });
-
+    wsRes.send( responseBody );
   });
 
 });
@@ -102,4 +86,18 @@ class WrpResponse{
 
 
 
+function doGetRequest(option){
+  return new Promise(function(resolve, reject){
+  
+  request.get(option, function(err, resp, body){
+      if (err) {
+        reject(err);
+      } else {
+        resolve(body);
+      }
 
+    });
+
+  });
+ 
+}
